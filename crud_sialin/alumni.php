@@ -3,6 +3,14 @@
 include 'conn.php';
 
 $data = mysqli_query($conn,"select * from user");
+session_start();
+echo $_SESSION['status'];
+
+// mengecek apakah sudah login belum
+if($_SESSION['status']!="login"){
+    header("location:index.php?pesan=belum_login");
+}
+
 ?>
 <html lang="en">
 <head>
@@ -14,12 +22,19 @@ $data = mysqli_query($conn,"select * from user");
     
 </head>
 <body>
+<a href="aksi_logout.php">Logout</a>
     <form action="aksi_tambah.php" method="post">
     Nama
     <input type="text" class="form-control" name="name"/>
     <br>
     Asal Sekolah
     <input type="text" class="form-control" name="asal"/>
+    <br>
+    Username
+    <input type="text" class="form-control" name="username"/>
+    <br>
+    Password
+    <input type="password" class="form-control" name="password"/>
     <br>
     Jenis Kelamin
     <select name="jk" class="form-control" id="">
@@ -39,6 +54,8 @@ $data = mysqli_query($conn,"select * from user");
                 <th>Nama</th>
                 <th>Asal</th>
                 <th>Jenis Kelamin</th>
+                <th>Username</th>
+                <th>Password</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -52,7 +69,9 @@ $data = mysqli_query($conn,"select * from user");
                 <td><?php echo $d['nama']; ?></td>
                 <td><?php echo $d['asal_sekolah']; ?></td>
                 <td><?php echo $d['jenis_kelamin']; ?></td>
-                <td> <a href="">Edit</a><a class="btn btn-danger" href="delete_alumni.php?id_alumni=<?php echo $d['id']; ?>">Hapus</a></td>
+                <td><?php echo $d['username']; ?></td>
+                <td><?php echo $d['password']; ?></td>
+                <td> <a href="edit_alumni.php?id_alumni=<?php echo $d['id']; ?>" class="btn btn-info">Edit</a><a class="btn btn-danger" href="delete_alumni.php?id_alumni=<?php echo $d['id']; ?>" onclick="if (confirm('Apakah Anda Yakin Ingin menghapus data alumni ini?')) commentDelete(1); return false">Hapus</a></td>
             </tr>
             <?php $no++; } ?>
         </tbody>
